@@ -1,3 +1,27 @@
-This is a way of speaking to your computer and having it speak back to you. It
-has a laundry list of dependencies, which is a big mess, TBH. I'll probably
-document that soon. In the meantime, please ignore the whole repository.
+This is a way of speaking to your computer and having it speak back to you. I'm
+currently only running this on my Mac (Snow Leopard), and it doesn't work on
+other OSes without going in and changing the code. Mac-specific stuff is
+documented below. TBH, this whole repository should probably just be ignored.
+
+It has a whole bunch of dependencies that you need to install:
+ - XCode (gcc, etc) off your OSX install disk
+ - macports (requires gcc, etc)
+ - py26-gobject from macports
+ - py-gobject from macports (perhaps one of these two is redundant?)
+ - gst-plugins-good from macports
+ - pyttsx by running the following command:
+     easy_install http://pypi.python.org/packages/any/p/pyttsx/pyttsx-1.0.egg#md5=4a7153e16b2360172286805466ee117d
+ - sphinxbase (from source code from CMU and sourceforge)
+ - pocketsphinx (from source code from CMU and sourceforge)
+
+Now, configure a few things:
+ - in your .zshrc, set PYTHONPATH to include the place where gobject is:
+     export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
+ - run the following two commands to load some stuff for gstreamer:
+    sudo launchctl load -w /Library/LaunchDaemons/org.freedesktop.dbus-system.plist
+    sudo launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
+ - Go to the computerbox directory and edit configuration.py.
+
+You'll also want to make the news- and weather-updaters into cron jobs:
+
+Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
