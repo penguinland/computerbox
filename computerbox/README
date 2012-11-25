@@ -1,0 +1,7 @@
+If you haven't done this already, edit configuration.py!
+
+To make sure everything is working, try running demo_test.py and saying stuff
+like "ONE STOP" and "TWO END" to it. When you're done, hit control-C.
+
+The data directory stores dictionaries and finite state machines (called finite
+state grammars) for PocketSphinx.
