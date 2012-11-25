@@ -7,6 +7,11 @@ The data directory stores dictionaries and finite state machines (called finite
 state grammars) for PocketSphinx.
 
 Individual files:
+- demo_test.py is a way to check if gstreamer and PocketSphinx are set up
+  correctly. It's also a way of trying out any new sets of commands you put
+  in the data directory.
 - speaker.py is a library for TTS stuff. It relies on pyttsx being installed,
   and by default has a Mac-specific implementation of Acknowledge(), though it
   comes with a generic one that you can use as well with a minor modification.
+- listener.py is a class for creating gstreamer/PocketSphinx pipelines. It's how
+  to get commands recognized.

@@ -1,4 +1,6 @@
 This directory contains data for the PocketSphinx speech recognition system.
+Files should come in pairs: a .dic file containing a pronunciation dictionary
+and a .fsg file containing a finite state grammar.
 
 If you haven't done so already, edit ../configuration.py and add the location of
 this directory as DATA_DIR!
