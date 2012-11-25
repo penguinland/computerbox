@@ -25,3 +25,7 @@ Now, configure a few things:
 You'll also want to make the news- and weather-updaters into cron jobs:
 
 Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
+ - In computerbox/speaker.py, near the bottom, change the way Acknowledge is
+   defined. There are two definitions of it (one setting it to _MacAcknowledge
+   and one setting it to _TtsAcknowledge); comment one out and uncomment the
+   other.
