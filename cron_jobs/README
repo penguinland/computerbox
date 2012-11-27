@@ -1,0 +1,29 @@
+This directory contains chron jobs for pulling data from elsewhere. We want to
+respond to the actual voice commands quickly, and can't wait to download stuff
+from the Internet before replying, so instead we download it ahead of time and
+can quickly read it back when prompted later.
+
+The news_articles directory is where the data gets stored; you should have a
+cron job to remove old stuff from there, or else it will grow larger and larger.
+The following line is a way to remove anything older than 7 days:
+  find /path/to/files/news_articles/* -mtime +7 -exec rm {} \;
+Note the spaces after rm and {}; those spaces are important. Run this as a chron
+job to keep the directory from growing too large.
+
+Files in this directory:
+- get_news.py downloads the RSS feeds from Google News for Science, US, and
+  World News, and then downloads the corresponding articles, processes them into
+  a text-only version, and stores them in the news_articles directory. It also
+  makes "table of contents" files in that directory, called sci.txt, us.txt,
+  world.txt, and all.txt that map the names of articles and publications to the
+  files in which they're stored.
+- article_to_text.py is a way of taking the HTML of an article from a website
+  and extracting the text from it. It's very ad hoc, and uses the readability
+  and BeautifulSoup modules for a lot of the heavy lifting. This is probably one
+  of the easiest parts of the whole system to improve, and the most likely part
+  to have overlooked edge cases.
+- news_cron.plist is a launchd configuration file to get a Mac to treat
+  get_news.py like a cron job. You need to run the following command:
+    launchctl load news_cron.plist
+  to get launchd to start cron'ing get_news.py, which will then automatically
+  download news stories to the news_articles/ directory every few hours.

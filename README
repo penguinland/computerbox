@@ -9,8 +9,13 @@ It has a whole bunch of dependencies that you need to install:
  - py26-gobject from macports
  - py-gobject from macports (perhaps one of these two is redundant?)
  - gst-plugins-good from macports
+ - py-beautifulsoup4 from macports
  - pyttsx by running the following command:
-     easy_install http://pypi.python.org/packages/any/p/pyttsx/pyttsx-1.0.egg#md5=4a7153e16b2360172286805466ee117d
+     sudo easy_install pyttsx
+ - cssselect by running the following command:
+     sudo easy_install cssselect
+ - readability-lxml by running the following command:
+     sudo easy_install readability-lxml
  - sphinxbase (from source code from CMU and sourceforge)
  - pocketsphinx (from source code from CMU and sourceforge)
 
