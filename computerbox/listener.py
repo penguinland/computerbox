@@ -2,7 +2,8 @@
 
 """
 This defines the CommandListener class, which sets up a gstreamer pipeline and
-PocketSphinx engine to recognize spoken phrases. 
+PocketSphinx engine to recognize spoken phrases. Each CommandListener object
+retains a queue of commands it has recognized the user spoke.
 
 Member functions in this class to be used elsewhere:
 - The constructor takes the name of a pair of .fsg and .dic files in the data
@@ -15,6 +16,8 @@ Member functions in this class to be used elsewhere:
   intention here is that you can have easy-to-use values returned instead of
   having stringly typed variables running all over the place, but this is
   completely optional.
+- HasCommand() indicates whether there is a command that has been recognized and
+  is ready to be dequeued.
 - GetCommand() and BlockingGetCommand() return the next command (one is
   nonblocking, the other is blocking). These commands are either values set with
   AddCommand(), or the raw text the person spoke. If there are no commands
