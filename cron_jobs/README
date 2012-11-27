@@ -1,14 +1,7 @@
-This directory contains chron jobs for pulling data from elsewhere. We want to
+This directory contains cron jobs for pulling data from elsewhere. We want to
 respond to the actual voice commands quickly, and can't wait to download stuff
 from the Internet before replying, so instead we download it ahead of time and
 can quickly read it back when prompted later.
-
-The news_articles directory is where the data gets stored; you should have a
-cron job to remove old stuff from there, or else it will grow larger and larger.
-The following line is a way to remove anything older than 7 days:
-  find /path/to/files/news_articles/* -mtime +7 -exec rm {} \;
-Note the spaces after rm and {}; those spaces are important. Run this as a chron
-job to keep the directory from growing too large.
 
 Files in this directory:
 - get_news.py downloads the RSS feeds from Google News for Science, US, and

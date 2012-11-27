@@ -6,6 +6,9 @@ like "ONE STOP" and "TWO END" to it. When you're done, hit control-C.
 The data directory stores dictionaries and finite state machines (called finite
 state grammars) for PocketSphinx.
 
+The gen directory stores programs that generate the finite state grammars stored
+in the data directory.
+
 Individual files:
 - demo_test.py is a way to check if gstreamer and PocketSphinx are set up
   correctly. It's also a way of trying out any new sets of commands you put
