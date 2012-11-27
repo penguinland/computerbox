@@ -12,16 +12,6 @@ def _StripTag(html, tag):
   """
   return re.sub("</?%s[^>]*>" % tag, "", html)
 
-def _StripTagAndText(html, tag):
-  """
-  Returns the html but with all instances of <tag>...</tag> removed (including
-  the intervening text).
-  """
-  # We use the *? notation to get the shortest matching piece of text, rather
-  # than the longest one. Note that this does not work if the tags are nested.
-  # TODO: use BeautifulSoup here to get nested tags right.
-  return re.sub("<%s[^>]*>.*?</%s>" % (tag, tag), "", html)
-
 def ExtractText(html):
   """
   Takes HTML of an article; returns the text of the article.
@@ -33,7 +23,8 @@ def ExtractText(html):
 
   # Remove all tables, including nested tables.
   soup = BeautifulSoup(better_html)
-  tags_to_remove = ["table", "tr", "td", "th", "figure"]  #, "div"]
+  tags_to_remove = ["table", "tr", "td", "th", "figure", "noscript", "cite",
+                    "link", "br", "img"]
   for tag in tags_to_remove:
     for subtree in soup.findAll(tag):
       subtree.extract()
@@ -61,13 +52,6 @@ def ExtractText(html):
                    "font", "html", "body"]
   for tag in tags_to_strip:
     better_html = _StripTag(better_html, tag)
-
-  better_html = _StripTagAndText(better_html, "noscript")
-  better_html = _StripTagAndText(better_html, "cite")
-  better_html = _StripTagAndText(better_html, "link")
-
-  better_html = re.sub("<br([^>])+?>", "", better_html)
-  better_html = re.sub("<img([^>])+?>", "", better_html)
 
   better_html = re.sub("<!--((?!-->)(\\n|.))*-->", "", better_html)
 
