@@ -3,6 +3,9 @@ respond to the actual voice commands quickly, and can't wait to download stuff
 from the Internet before replying, so instead we download it ahead of time and
 can quickly read it back when prompted later.
 
+The news_articles/ directory is somewhat like a cache of local articles: it is
+written to by these cron jobs, and read from in the main computerbox program.
+
 Files in this directory:
 - get_news.py downloads the RSS feeds from Google News for Science, US, and
   World News, and then downloads the corresponding articles, processes them into
