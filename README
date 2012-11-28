@@ -16,8 +16,8 @@ It has a whole bunch of dependencies that you need to install:
      sudo easy_install cssselect
  - readability (requires cssselect) by running the following command:
      sudo easy_install readability-lxml
- - sphinxbase (from source code from CMU and sourceforge)
- - pocketsphinx (from source code from CMU and sourceforge)
+ - sphinxbase from source code from CMU and sourceforge
+ - pocketsphinx (requires sphinxbase) from source code from CMU and sourceforge
 
 Now, configure a few things:
  - in your .zshrc, set PYTHONPATH to include the place where gobject is:
