@@ -25,7 +25,7 @@ world = "http://news.google.com/news?ned=us&topic=w&output=rss"
 # should be run on.
 directory = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
 
-# TODO: We get an IOError when the socket times out; handle that correctly.
+# We get an IOError when a socket times out; remember to handle that.
 socket.setdefaulttimeout(10)  # timeout in seconds
 
 def ParseArticleRSS(xml):
@@ -47,9 +47,13 @@ def GetArticles(rss):
   Takes a URL of an RSS feed; returns a list of (headline, newspaper name, URL)
   tuples.
   """
-  f = urllib.urlopen(rss)
-  xml = f.read()
-  f.close()
+  try:
+    f = urllib.urlopen(rss)
+    xml = f.read()
+    f.close()
+  except IOError:
+    # Retrieving the RSS feed timed out
+    return []
   xml = xml.replace("\n", " ")
   article_matches = re.finditer("<item>(.*?)</item>", xml)
   return [ParseArticleRSS(piece.group(1)) for piece in article_matches]
@@ -85,8 +89,12 @@ def StoreArticle(article_tuple, file):
 
   file_hash = hashlib.sha224(title).hexdigest()
 
-  GetArticleText(url, file_hash)
-  file.write("%s\t%s\n" % (title, file_hash))
+  try:
+    GetArticleText(url, file_hash)
+    file.write("%s\t%s\n" % (title, file_hash))
+  except IOError:
+    # Retrieving the article timed out; skip it.
+    pass
 
 def StoreArticles(article_list, filename):
   """
