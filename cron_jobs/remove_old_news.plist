@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" \
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>get_news</string>
+  <key>UserName</key>
+  <string>alandavidson</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>find</string>
+    <string>/Users/alandavidson/computerbox/cron_jobs/news_articles/*</string>
+    <string>-mtime</string>
+    <string>+7</string>
+    <string>-exec</string>
+    <string>rm</string>
+    <string>{}</string>
+    <string>\;</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>86400</integer>
+  <key>Debug</key>
+  <false/>
+  <key>AbandonProcessGroup</key>
+  <true/>
+</dict>
+</plist>
