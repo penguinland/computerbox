@@ -76,10 +76,9 @@ def GetArticleText(url, filename):
 def StoreArticle(article_tuple, file):
   """
   Takes a (headline, URL) pair and a file opened for writing.
-  This hashes the headline and newspaper name to a variable called file_hash,
-  and then:
+  This hashes the headline to a variable called file_hash, and then:
    - puts the text of the article in directory/file_hash.txt
-   - writes this record to the file.
+   - writes a record of this to the file.
   """
   title = article_tuple[0]
   url = article_tuple[1]
