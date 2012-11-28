@@ -16,8 +16,8 @@ It has a whole bunch of dependencies that you need to install:
      sudo easy_install cssselect
  - readability (requires cssselect) by running the following command:
      sudo easy_install readability-lxml
- - sphinxbase (from source code from CMU and sourceforge)
- - pocketsphinx (from source code from CMU and sourceforge)
+ - sphinxbase from source code from CMU and sourceforge
+ - pocketsphinx (requires sphinxbase) from source code from CMU and sourceforge
 
 Now, configure a few things:
  - in your .zshrc, set PYTHONPATH to include the place where gobject is:
@@ -26,9 +26,9 @@ Now, configure a few things:
      sudo launchctl load -w /Library/LaunchDaemons/org.freedesktop.dbus-system.plist
      sudo launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
  - Go to the computerbox directory and edit configuration.py.
- - Go to the cron_jobs directory and edit get_news.py by changing the directory
-   variable on line 26
- - Go to the cron_jobs directory and add the .plist files to launchd:
+ - Go to the cron_jobs/ directory and edit get_news.py to change the directory
+   variable on line 26.
+ - Go to the cron_jobs/ directory and add the .plist files to launchd:
      launchctl load news_cron.plist
      launchctl load remove_old_news.plist
 
@@ -42,3 +42,6 @@ Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
    defined. There are two definitions of it (one setting it to _MacAcknowledge
    and one setting it to _TtsAcknowledge); comment one out and uncomment the
    other.
+ - Using launchd and the .plist files in the cron_jobs/ directory is
+   Mac-specific; you'll want to run those as cron jobs instead. Look at the
+   README in that directory FMI.

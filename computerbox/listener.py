@@ -2,7 +2,8 @@
 
 """
 This defines the CommandListener class, which sets up a gstreamer pipeline and
-PocketSphinx engine to recognize spoken phrases. 
+PocketSphinx engine to recognize spoken phrases. Each CommandListener object
+retains a queue of commands it has recognized the user spoke.
 
 Member functions in this class to be used elsewhere:
 - The constructor takes the name of a pair of .fsg and .dic files in the data
@@ -15,14 +16,19 @@ Member functions in this class to be used elsewhere:
   intention here is that you can have easy-to-use values returned instead of
   having stringly typed variables running all over the place, but this is
   completely optional.
+- HasCommand() indicates whether there is a command that has been recognized and
+  is ready to be dequeued.
 - GetCommand() and BlockingGetCommand() return the next command (one is
   nonblocking, the other is blocking). These commands are either values set with
   AddCommand(), or the raw text the person spoke. If there are no commands
   enqueued when GetCommand() is called, it returns None.
+- ClearCommands() will remove any recognized commands that have been queued up
+  waiting for a call to GetCommand().
 
 We store received commands in a threadsafe queue because gstreamer does some
-kind of crazy thread stuff, and this way we can asynchronously add and remove
-stuff from the command queue.
+kind of crazy thread stuff that doesn't play well with pyttsx, and this way we
+can asynchronously add and remove stuff from the command queue and pyttsx won't
+throw a fit.
 """
 
 import gobject
@@ -35,23 +41,24 @@ import Queue
 
 import configuration
 
-# TODO: remove this when I'm confident everything is working again
-#file_base = "/Users/alandavidson/svn1/voice/pocketsphinx/data"
-
 class CommandListener(object):
   def __init__(self, name):
     self.command_queue = Queue.Queue()  # Must be threadsafe
     self.command_registry = {}  # Mapping from spoken phrases to return values
 
-    # TODO: change this so that most of this pipeline is shared among all
-    # listeners. We don't need multiple audioresample steps, for instance.
+    # My first instinct was to try to turn this pipeline into a tree, so that we
+    # only have one audioconvert and resample and vader for all the different
+    # listeners. However, I don't think gstreamer supports that, since you'd
+    # need multiple consumers of certain output pads. However, duplicating the
+    # early stages of the pipeline isn't a big deal computationally as long as
+    # most of the listeners are paused most of the time. It might be a memory
+    # hog, but might not be; look into this if it becomes a problem.
     self.pipeline = gst.parse_launch(
         "gconfaudiosrc ! audioconvert ! audioresample ! " +
         "vader name=vad auto-threshold=true ! " +
         ("pocketsphinx name=%s ! " % name) +
         "fakesink")
 
-    #whole_filename = "%s/%s" % (file_base, name)
     whole_filename = "%s/%s" % (configuration.DATA_DIR, name)
     asr = self.pipeline.get_by_name(name)
     asr.set_property('fsg', "%s.fsg" % whole_filename)
@@ -77,6 +84,9 @@ class CommandListener(object):
     return not self.command_queue.empty()
 
   def GetCommand(self):
+    # If we try to dequeue something from an empty queue, the Empty exception is
+    # raised. Consider using this in the future, but for now just return None
+    # instead.
     if self.HasCommand():
       return self.command_queue.get()
     return None

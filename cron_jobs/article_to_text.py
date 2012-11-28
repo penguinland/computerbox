@@ -12,16 +12,6 @@ def _StripTag(html, tag):
   """
   return re.sub("</?%s[^>]*>" % tag, "", html)
 
-def _StripTagAndText(html, tag):
-  """
-  Returns the html but with all instances of <tag>...</tag> removed (including
-  the intervening text).
-  """
-  # We use the *? notation to get the shortest matching piece of text, rather
-  # than the longest one. Note that this does not work if the tags are nested.
-  # TODO: use BeautifulSoup here to get nested tags right.
-  return re.sub("<%s[^>]*>.*?</%s>" % (tag, tag), "", html)
-
 def ExtractText(html):
   """
   Takes HTML of an article; returns the text of the article.
@@ -33,7 +23,8 @@ def ExtractText(html):
 
   # Remove all tables, including nested tables.
   soup = BeautifulSoup(better_html)
-  tags_to_remove = ["table", "tr", "td", "th", "figure"]  #, "div"]
+  tags_to_remove = ["table", "tr", "td", "th", "figure", "noscript", "cite",
+                    "link", "br", "img"]
   for tag in tags_to_remove:
     for subtree in soup.findAll(tag):
       subtree.extract()
@@ -49,25 +40,17 @@ def ExtractText(html):
         # p_contents was text, rather than more HTML.
         pass
   better_html = soup.prettify()  # cast it back to a string
-
   better_html = better_html.replace("\n", " ")
   better_html = better_html.replace("\t", " ")
 
-  # Remove headers
+  # Remove headers (but keep the text in them)
   for i in range(1, 8):
     better_html = _StripTag(better_html, "h%d" % i)
   # Remove other text modification tags
   tags_to_strip = ["a", "b", "i", "strong", "span", "em", "ul", "ol", "li",
-                   "font", "html", "body"]
+                   "font"]
   for tag in tags_to_strip:
     better_html = _StripTag(better_html, tag)
-
-  better_html = _StripTagAndText(better_html, "noscript")
-  better_html = _StripTagAndText(better_html, "cite")
-  better_html = _StripTagAndText(better_html, "link")
-
-  better_html = re.sub("<br([^>])+?>", "", better_html)
-  better_html = re.sub("<img([^>])+?>", "", better_html)
 
   better_html = re.sub("<!--((?!-->)(\\n|.))*-->", "", better_html)
 
@@ -119,15 +102,17 @@ def ExtractText(html):
   # TODO: remove unknown &#...;'s when I'm confident I have all the important
   # ones.
 
+  # Strip out tags that don't have closing tags, since they're not text and
+  # cannot be turned into text.
+  better_html = re.sub(r"<(\w*)( [^>]*)?/>", "", better_html)
+
   # Strip out empty and useless HTML tags. Note that this repeats to
   # convergence, so that we can get rid of things like <a><b></b></a>
   next_html = re.sub(r"<(\w*)( [^>]*)?> *</\1>", "", better_html)
-  next_html = re.sub(r"<(\w*)( [^>]*)?/>", "", next_html)
   next_html = re.sub("\s+", " ", next_html)
   while next_html != better_html:  # more empty tags to strip out
     better_html = next_html
     next_html = re.sub(r"<(\w*)( [^>]*)?>\s*</\1>", "", better_html)
-    next_html = re.sub(r"<(\w*)( [^>]*)?/>", "", next_html)
     next_html = re.sub("\s+", " ", next_html)
 
   # <div> tags are tricky: sometimes they contain junk to remove, and sometimes
@@ -173,6 +158,8 @@ def ExtractText(html):
 
   # If there are any crazy Unicode characters left, try to convert them to ASCII
   # equivalents.
+  # TODO: look into the unicodedata module; there's probably something useful in
+  # that to turn accented characters into non-accented ones.
   #text = text.encode("ASCII", "replace")
   # As a last resort, remove any remaining non-speakable characters.
   text = re.sub("[^a-zA-Z0-9#$%&()'/.,!?;:\t\n -]", "", text)
