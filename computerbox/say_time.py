@@ -61,7 +61,7 @@ def _FormatHour(h, m):
     return "noon"
   return (h + 1) % 12
 
-def SpeakTime():
+def SayTime():
   # Easter eggs!
   choice = random.random()
   if choice < 0.02:
@@ -81,4 +81,4 @@ def SpeakTime():
     if h == 0 and m == 0:
       text = "midnight"
 
-    speaker.Speak(text)
+    speaker.Say(text)
