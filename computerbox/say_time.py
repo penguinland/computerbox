@@ -26,8 +26,8 @@ def _GetNumericalTime():
   if m == 60:
     h += 1
     m = 0
-  if h == 24:
-    h = 0
+    if h == 24:
+      h = 0
   return (h, m)
 
 def _FormatMinute(h, m):
@@ -54,12 +54,13 @@ def _FormatHour(h, m):
     if h == 12:
       return "noon"
     return h % 12
-  # If we get this far, we're closer to the next hour than the previous one.
-  if h == 23:
-    return "midnight"
-  if h == 11:
-    return "noon"
-  return (h + 1) % 12
+  else:
+    # We're closer to the next hour than the previous one
+    if h == 23:
+      return "midnight"
+    if h == 11:
+      return "noon"
+    return (h + 1) % 12
 
 def SayTime():
   # Easter eggs!
