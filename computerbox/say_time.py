@@ -53,13 +53,13 @@ def _FormatHour(h, m):
       return "midnight"
     if h == 12:
       return "noon"
-    return h
+    return h % 12
   # If we get this far, we're closer to the next hour than the previous one.
   if h == 23:
     return "midnight"
   if h == 11:
     return "noon"
-  return h + 1
+  return (h + 1) % 12
 
 def SpeakTime():
   # Easter eggs!
