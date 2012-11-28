@@ -10,8 +10,7 @@ The functions from here to use elsewhere are:
     something. There are Mac- and nonMac-specific versions of this; look near
     the bottom to see where they're defined and change from using one to the
     other.
- - Speak(text) or Say(text) uses pyttsx to speak the text. This works best if
-   you feed it at most a paragraph at a time.
+ - Speak(text) or Say(text) uses pyttsx to speak the text.
 """
 
 import pyttsx

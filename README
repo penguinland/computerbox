@@ -14,7 +14,7 @@ It has a whole bunch of dependencies that you need to install:
      sudo easy_install pyttsx
  - cssselect by running the following command:
      sudo easy_install cssselect
- - readability-lxml by running the following command:
+ - readability (requires cssselect) by running the following command:
      sudo easy_install readability-lxml
  - sphinxbase (from source code from CMU and sourceforge)
  - pocketsphinx (from source code from CMU and sourceforge)
@@ -23,16 +23,21 @@ Now, configure a few things:
  - in your .zshrc, set PYTHONPATH to include the place where gobject is:
      export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
  - run the following two commands to load some stuff for gstreamer:
-    sudo launchctl load -w /Library/LaunchDaemons/org.freedesktop.dbus-system.plist
-    sudo launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
+     sudo launchctl load -w /Library/LaunchDaemons/org.freedesktop.dbus-system.plist
+     sudo launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
  - Go to the computerbox directory and edit configuration.py.
-
-You'll also want to make the news- and weather-updaters into cron jobs:
-TODO: add this in
+ - Go to the cron_jobs directory and edit get_news.py by changing the directory
+   variable on line 26
+ - Go to the cron_jobs directory and add the .plist files to launchd:
+     launchctl load news_cron.plist
+     launchctl load remove_old_news.plist
 
 Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
  - Much of the installation and configuration described above is probably
    different.
+ - In particular, adding cron-like jobs on other systems probably doesn't use
+   launchd and plists, so you're on your own setting up the stuff in the
+   cron_jobs directory.
  - In computerbox/speaker.py, near the bottom, change the way Acknowledge is
    defined. There are two definitions of it (one setting it to _MacAcknowledge
    and one setting it to _TtsAcknowledge); comment one out and uncomment the

@@ -1,7 +1,10 @@
+If you have not yet done so, edit get_news.py to set the directory variable on
+line 26 correctly!
+
 This directory contains cron jobs for pulling data from elsewhere. We want to
-respond to the actual voice commands quickly, and can't wait to download stuff
-from the Internet before replying, so instead we download it ahead of time and
-can quickly read it back when prompted later.
+respond to the actual voice commands quickly, so we can't wait to download stuff
+from the Internet before replying. Instead, we download it ahead of time and
+then we can quickly read it back when prompted later.
 
 Files in this directory:
 - get_news.py downloads the RSS feeds from Google News for Science, US, and
