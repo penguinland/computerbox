@@ -59,7 +59,7 @@ def _FormatHour(h, m):
     return "midnight"
   if h == 11:
     return "noon"
-  return h
+  return h + 1
 
 def SpeakTime():
   # Easter eggs!
