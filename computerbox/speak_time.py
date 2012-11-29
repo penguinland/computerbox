@@ -48,19 +48,14 @@ def _FormatMinute(h, m):
 
 def _FormatHour(h, m):
   """Returns the nearest hour"""
-  if m <= 30:
-    if h == 0:
-      return "midnight"
-    if h == 12:
-      return "noon"
-    return h % 12
-  else:
-    # We're closer to the next hour than the previous one
-    if h == 23:
-      return "midnight"
-    if h == 11:
-      return "noon"
-    return (h + 1) % 12
+  if m > 30:
+    h += 1
+
+  if h == 0 or h == 24:
+    return "midnight"
+  if h == 12:
+    return "noon"
+  return h % 12
 
 def SayTime():
   # Easter eggs!
@@ -82,4 +77,4 @@ def SayTime():
     if h == 0 and m == 0:
       text = "midnight"
 
-    speaker.Say(text)
+    speaker.Speak(text)
