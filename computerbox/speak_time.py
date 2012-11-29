@@ -57,7 +57,7 @@ def _FormatHour(h, m):
     return "noon"
   return h % 12
 
-def SayTime():
+def SpeakTime():
   # Easter eggs!
   choice = random.random()
   if choice < 0.02:
