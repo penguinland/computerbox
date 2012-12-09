@@ -10,7 +10,7 @@
   <key>ProgramArguments</key>
   <array>
     <string>find</string>
-    <string>/Users/alandavidson/computerbox/cron_jobs/news_articles/*</string>
+    <string>/Users/alandavidson/computerbox/cron_jobs/news_articles/*.txt</string>
     <string>-mtime</string>
     <string>+7</string>
     <string>-exec</string>
