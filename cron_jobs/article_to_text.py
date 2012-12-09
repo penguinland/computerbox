@@ -63,7 +63,8 @@ def ExtractText(html):
 
   quotes = ["&quot;", "&raquot;", "\"", "&rdquot;", "&#8221;", "&#8220;",
             "&ldquot;", "&ldquo;", "&rdquo;", 
-            unichr(0x201c).encode("UTF-8"), unichr(0x201d).encode("UTF-8")]
+            unichr(0x201c).encode("UTF-8"), unichr(0x201d).encode("UTF-8"),
+            unichr(0x201c), unichr(0x201d)]
   for quote in quotes:
     # Put the quote on the other side of a period/comma if it's at the end of a
     # sentence, so that the pause is in the right place.
