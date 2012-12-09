@@ -1,3 +1,4 @@
 # Python makes a bunch of JIT-compiled binaries for all the files it executes.
 # Don't put them in git.
 *.pyc
+cron_jobs/news_articles/*.txt

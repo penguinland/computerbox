@@ -67,6 +67,7 @@ def SayTime():
   choice = random.random()
   if choice < 0.02:
     speaker.Speak("adventure time!")
+    return
   #elif choice < 0.04:
   #  speaker.Speak("shirtless o'clock!")
   else:
@@ -83,3 +84,6 @@ def SayTime():
       text = "midnight"
 
     speaker.Say(text)
+
+if __name__ == "__main__":
+  SayTime()
