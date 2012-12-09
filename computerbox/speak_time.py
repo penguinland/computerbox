@@ -63,8 +63,8 @@ def SpeakTime():
   if choice < 0.02:
     speaker.Speak("adventure time!")
     return
-  #elif choice < 0.04:
-  #  speaker.Speak("shirtless o'clock!")
+  elif choice < 0.04:
+    speaker.Speak("shirtless o'clock!")
   else:
     # Actually give the time
     (h, m) = _GetNumericalTime()  # 24 hour time, rounded to the nearest 5 min.

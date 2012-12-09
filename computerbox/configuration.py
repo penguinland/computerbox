@@ -10,6 +10,9 @@ one file you need to modify.
 # directory.
 DATA_DIR = "/Users/alandavidson/computerbox/computerbox/data"
 
+# The directory where news articles are written by the cron jobs.
+NEWS_DIR = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
+
 # A mapping from mispronounced lowercased words to phonetic versions. Comments
 # are phonetic versions of the default pronunciation, to explain why the word
 # was added here.
