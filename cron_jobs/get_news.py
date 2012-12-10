@@ -4,6 +4,7 @@
 This file should be run as a cron job. It gets news articles from the Google
 News RSS feeds and uses article_to_text.py to extract the text, then saves that
 text and some "table of contents" text files into the news_articles directories.
+It also gets weather forecasts from the Weather Underground.
 """
 
 # To get rid of old files, try this;
@@ -102,6 +103,9 @@ def StoreArticles(article_list, filename):
   Takes a list of article tuples and a filename; downloads the spoken headlines
   and text of the articles, saves them, and puts an index file in filename.
   """
+  # TODO: make this whole thing atomic, so that if we try reading the directory
+  # in the middle of this, it all works. Presumably the right thing to do is to
+  # write to a temporary directory and rename it when we're done.
   file = open("%s/%s.txt" % (directory, filename), "w")
   for article in article_list:
     StoreArticle(article, file)
