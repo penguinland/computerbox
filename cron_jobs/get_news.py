@@ -15,6 +15,7 @@ import re
 import socket
 import urllib
 import article_to_text
+import get_weather
 
 scitech = "http://news.google.com/news?ned=us&topic=t&output=rss"
 us = "http://news.google.com/news?ned=us&topic=n&output=rss"
@@ -122,3 +123,5 @@ if __name__ == "__main__":
   results.extend(us_results)
   results.extend(world_results)
   StoreArticles(results, "all")
+  print "getting weather..."
+  get_weather.GetWeather()
