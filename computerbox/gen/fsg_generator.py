@@ -14,11 +14,11 @@ When you are done creating all your nodes, run PrintFSG(), and the FSG will be
 printed to stdout.
 
 This is useful because it produces FSGs which are much more efficient than
-sphinx_jsgf2fsg.
+those made by sphinx_jsgf2fsg.
 
 Note that all edges in the generated FSGs have equal weight. If you want an HMM
 model in which the edges coming out of a node are unequally weighted, you'll
-need to do something different.
+need to edit them afterwards or do something different.
 """
 
 _registry = []  # A list of nodes
@@ -54,7 +54,7 @@ class Node(object):
   def Print(self):
     #print "node #%s has %s edges." % (self.number, len(self.edges))
     if len(self.edges) == 0 and self.number == 1:
-      return  # we're the ending node.
+      return  # We're the ending node.
 
     prob = 1.0 / len(self.edges)
     for e in self.edges:

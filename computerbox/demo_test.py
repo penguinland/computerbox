@@ -35,8 +35,6 @@ pipeline = gst.parse_launch(
 
 def AsrResult(asr, text, uttid):
   """Forward result signals on the bus to the main thread."""
-  print "starting to speak..."
-  print "done speaking!"
   print "\nGot result: %s\n" % text
 
 def AsrPartialResult(asr, text, uttid):
