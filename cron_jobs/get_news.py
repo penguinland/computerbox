@@ -69,7 +69,7 @@ def GetArticleText(url, filename):
   # TODO: figure out why I sometimes get empty articles or "access denied"
   # errors. These sites work perfectly fine in Firefox when I disable cookies,
   # javascript, and flash; what is different between that and my downloader?
-  article_file = open("%s/%s.txt" % (configuration.CACHE_DIR, filename), "w")
+  article_file = open("%s/%s.txt" % (configuration.NEWS_DIR, filename), "w")
   # TODO: if the last line of the article is less than 80 characters long and
   # contains an @ symbol, don't write it out, because it's just the contact
   # info of the editors or whatever.
@@ -103,7 +103,7 @@ def StoreArticles(article_list, filename):
   # TODO: make this whole thing atomic, so that if we try reading the directory
   # in the middle of this, it all works. Presumably the right thing to do is to
   # write to a temporary directory and rename it when we're done.
-  file = open("%s/%s.txt" % (configuration.CACHE_DIR, filename), "w")
+  file = open("%s/%s.txt" % (configuration.NEWS_DIR, filename), "w")
   for article in article_list:
     StoreArticle(article, file)
   file.close()

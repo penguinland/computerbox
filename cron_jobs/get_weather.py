@@ -30,7 +30,7 @@ def GetWeather():
   soup = BeautifulSoup(xml)
   forecast = soup.find_all("div", "foreGlance")
 
-  f = open("%s/%s" % (configuration.CACHE_DIR, "weather.txt"), "w")
+  f = open("%s/%s" % (configuration.NEWS_DIR, "weather.txt"), "w")
   f.write(_SoupToText(forecast[0]))
   f.write(_SoupToText(forecast[1]))
   f.close()
