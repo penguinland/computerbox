@@ -1,5 +1,5 @@
-If you have not yet done so, edit get_news.py to set the directory variable on
-line 26 correctly!
+If you have not yet done so, edit configuration.py now! Yes, this one is
+separate from the one in the main computerbox directory.
 
 This directory contains cron jobs for pulling data from elsewhere. We want to
 respond to the actual voice commands quickly, so we can't wait to download stuff
@@ -16,12 +16,20 @@ directory. Here's a function to do that for you:
 The 7 takes out anything over a week old. Note the spaces after rm and {}
 
 Files in this directory:
+- configuration.py contains constants used in the other files. You should edit
+  it to contain the path to where you have stored the code and your local
+  weather forecast.
 - get_news.py downloads the RSS feeds from Google News for Science, US, and
   World News, and then downloads the corresponding articles, processes them into
   a text-only version, and stores them in the news_articles directory. It also
   makes "table of contents" files in that directory, called sci.txt, us.txt,
   world.txt, and all.txt that map the names of articles and publications to the
-  files in which they're stored.
+  files in which they're stored. Finally, it calls get_weather.py, because
+  whenever someone wants updated news, they probably also want updated weather.
+- get_weather.py grabs the weather forecast for the next 24 hours from the
+  Weather Underground, and stores it in a text file to be read aloud later.
+  Although you can call it on its own, it gets called primarily from
+  get_news.py.
 - article_to_text.py is a way of taking the HTML of an article from a website
   and extracting the text from it. It's very ad hoc, and uses the readability
   and BeautifulSoup modules for a lot of the heavy lifting. This is probably one
@@ -31,4 +39,5 @@ Files in this directory:
   get_news.py like a cron job. You need to run the following command:
     launchctl load news_cron.plist
   to get launchd to start cron'ing get_news.py, which will then automatically
-  download news stories to the news_articles/ directory every few hours.
+  download weather forecasts and news stories to the news_articles/ directory
+  every few hours.

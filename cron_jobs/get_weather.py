@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import re
 import urllib
 
+import configuration
+
 directory = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
 
 def _SoupToText(soup):
@@ -21,14 +23,14 @@ def _SoupToText(soup):
   return re.sub(r"\s+", " ", text)
 
 def GetWeather():
-  f = urllib.urlopen("http://www.wunderground.com/cgi-bin/findweather/hdfForecast?query=27705&MR=1")
+  f = urllib.urlopen(configuration.WEATHER_URL)
   xml = f.read()
   f.close()
 
   soup = BeautifulSoup(xml)
   forecast = soup.find_all("div", "foreGlance")
 
-  f = open("%s/%s" % (directory, "weather.txt"), "w")
+  f = open("%s/%s" % (configuration.CACHE_DIR, "weather.txt"), "w")
   f.write(_SoupToText(forecast[0]))
   f.write(_SoupToText(forecast[1]))
   f.close()
