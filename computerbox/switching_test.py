@@ -20,6 +20,7 @@ import gst
 
 import signal
 import sys
+import time
 
 import configuration
 
@@ -32,8 +33,6 @@ pipeline = gst.parse_launch(
   "gconfaudiosrc ! audioconvert ! audioresample ! " +
   "vader name=vad auto-threshold=true ! pocketsphinx name=asr ! " +
   "fakesink")
-
-grammar_num = 0
 
 def SwitchTo(name):
   print "Switching FSG and dictionary to %s..." % name
@@ -50,8 +49,12 @@ def SwitchTo(name):
 def AsrResult(asr, text, uttid):
   """Forward result signals on the bus to the main thread."""
   print "\nGot result: %s\n" % text
-  if text == "SWITCH GRAMMAR":
-    SwitchTo("grammar%s" % grammar_num % 2)
+  #time.sleep(1)
+  print "resuming..."
+  if text == "STOP READING HEADLINES":
+    SwitchTo("test")
+  if text == "THREE END":
+    SwitchTo("news")
 
 def AsrPartialResult(asr, text, uttid):
   """Forward result signals on the bus to the main thread."""
@@ -63,7 +66,7 @@ def Initialize():
     file = sys.argv[1]
   else:
     file = "test"
-  filename = "%s/grammar%s" % (configuration.DATA_DIR, grammar_num)
+  filename = "%s/%s" % (configuration.DATA_DIR, file)
 
   asr = pipeline.get_by_name('asr')
   asr.set_property('fsg', "%s.fsg" % filename)
