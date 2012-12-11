@@ -48,11 +48,21 @@ class CommandListener(object):
 
     # My first instinct was to try to turn this pipeline into a tree, so that we
     # only have one audioconvert and resample and vader for all the different
-    # listeners. However, I don't think gstreamer supports that, since you'd
-    # need multiple consumers of certain output pads. However, duplicating the
-    # early stages of the pipeline isn't a big deal computationally as long as
-    # most of the listeners are paused most of the time. It might be a memory
-    # hog, but might not be; look into this if it becomes a problem.
+    # listeners. Duplicating the early stages of the pipeline isn't a big deal
+    # computationally as long as most of the listeners are paused most of the
+    # time, so the current approach isn't so bad. It might be a memory hog, but
+    # might not be; look into this if it becomes a problem.
+    # UPDATE: It _is_ possible to share most of the pipeline! There's a
+    # gstreamer element called tee that does 1-to-many conversions. Look at its
+    # implementation at
+    # http://mediatools.cs.ucl.ac.uk/nets/newvideo/browser/gst-cvs/gstreamer/plugins/elements/gsttee.c
+    # and try to find tutorials on how to do it in Python and stuff. However,
+    # you can only pause entire pipelines, not just parts of one. Perhaps moving
+    # to tee would actually be worse overall. Then again, I can't find where in
+    # the source code for gsttee it copies anything; perhaps it's all done with
+    # ref counts, and if there is some way to turn off individual asr's, it
+    # would be much better. Look into gst_element_set_state(), which might do
+    # this?
     self.pipeline = gst.parse_launch(
         "gconfaudiosrc ! audioconvert ! audioresample ! " +
         "vader name=vad auto-threshold=true ! " +
