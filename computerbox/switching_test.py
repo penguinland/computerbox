@@ -33,9 +33,25 @@ pipeline = gst.parse_launch(
   "vader name=vad auto-threshold=true ! pocketsphinx name=asr ! " +
   "fakesink")
 
+grammar_num = 0
+
+def SwitchTo(name):
+  print "Switching FSG and dictionary to %s..." % name
+  filename = "%s/%s" % (configuration.DATA_DIR, name)
+  asr = pipeline.get_by_name('asr')
+  pipeline.set_state(gst.STATE_PAUSED)
+  asr.set_property('configured', False)
+  asr.set_property('fsg', "%s.fsg" % filename)
+  asr.set_property('dict', "%s.dic" % filename)
+  asr.set_property('configured', True)
+  pipeline.set_state(gst.STATE_PLAYING)
+  print "done switching!"
+
 def AsrResult(asr, text, uttid):
   """Forward result signals on the bus to the main thread."""
   print "\nGot result: %s\n" % text
+  if text == "SWITCH GRAMMAR":
+    SwitchTo("grammar%s" % grammar_num % 2)
 
 def AsrPartialResult(asr, text, uttid):
   """Forward result signals on the bus to the main thread."""
@@ -47,7 +63,7 @@ def Initialize():
     file = sys.argv[1]
   else:
     file = "test"
-  filename = "%s/%s" % (configuration.DATA_DIR, file)
+  filename = "%s/grammar%s" % (configuration.DATA_DIR, grammar_num)
 
   asr = pipeline.get_by_name('asr')
   asr.set_property('fsg', "%s.fsg" % filename)

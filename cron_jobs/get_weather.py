@@ -6,8 +6,6 @@ import urllib
 
 import configuration
 
-directory = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
-
 def _SoupToText(soup):
   period = soup("div", "titleSubtle")[0].get_text()  # ex: Tonight, Tomorrow
   temperature = soup("div", "foreSummary")[0].get_text()
@@ -30,7 +28,7 @@ def GetWeather():
   soup = BeautifulSoup(xml)
   forecast = soup.find_all("div", "foreGlance")
 
-  f = open("%s/weather.txt" % configuration.CACHE_DIR, "w")
+  f = open("%s/weather.txt" % configuration.NEWS_DIR, "w")
   f.write(_SoupToText(forecast[0]))
   f.write(_SoupToText(forecast[1]))
   f.close()

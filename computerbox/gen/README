@@ -5,14 +5,14 @@ is in fsg_generator.py. Examine its source for instructions on how to use it, or
 look at test_gen.py and ../data/test.fsg for an example.
 
 If you are familiar with PocketSphinx, you may be confused why we're not using
-their context free grammar notation and running sphinx_jsgf2fsg on them. There
-are two main reasons:
+the Java Speech Grammar Format and running sphinx_jsgf2fsg on them. There are
+two main reasons:
 - PocketSphinx runs on finite state machines. Defining them using the syntax of
-  context free grammars is confusing because it implies you have extra control
+  context free grammars is misleading because it implies you have extra control
   over the grammar that you don't actually have (i.e., even if you wrote a
   context free grammar, it isn't allowed to be more powerful than an FSM for
-  PocketSphinx to use it)
-- The CFG-to-FSG conversion utility sphinx_jsgf2fsg is horribly inefficient. It
-  will create extra nodes where none are needed, sometimes duplicating large
-  sets of nodes. The method included in this directory builds much more
-  efficient FSMs.
+  PocketSphinx to use it).
+- The CFG-to-FSG conversion utility sphinx_jsgf2fsg has horribly inefficient
+  output. It will create extra nodes where none are needed, sometimes
+  duplicating large sets of nodes. The approach included in this directory
+  builds much more efficient FSMs.

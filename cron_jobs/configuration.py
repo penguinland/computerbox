@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-CACHE_DIR = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
+NEWS_DIR = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
 
 # Your ZIP code for weather forecasts
 ZIP_CODE = 27705
