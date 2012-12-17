@@ -2,4 +2,5 @@
 # Don't put them in git.
 *.pyc
 cron_jobs/news_articles/*.txt
-*/configuration.py
+computerbox/configuration.py
+cron_jobs/configuration.py
