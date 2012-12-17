@@ -8,3 +8,4 @@ cron_jobs/news_articles/*.txt
 # computer this gets installed on.
 computerbox/configuration.py
 cron_jobs/configuration.py
+configuration.py
