@@ -4,20 +4,28 @@ other OSes without going in and changing the code. Mac-specific stuff is
 documented below. TBH, this whole repository should probably just be ignored.
 
 It has a whole bunch of dependencies that you need to install:
- - XCode (gcc, etc) off your OSX install disk
- - macports (requires gcc, etc)
- - py26-gobject from macports
- - py-gobject from macports (perhaps one of these two is redundant?)
- - gst-plugins-good from macports
- - py-beautifulsoup4 from macports
- - pyttsx by running the following command:
-     sudo easy_install pyttsx
- - cssselect by running the following command:
-     sudo easy_install cssselect
- - readability (requires cssselect) by running the following command:
-     sudo easy_install readability-lxml
- - sphinxbase from source code from CMU and sourceforge
- - pocketsphinx (requires sphinxbase) from source code from CMU and sourceforge
+- XCode (gcc, etc) off your OSX install disk
+- macports (requires gcc, etc)
+- py26-gobject from macports
+- py-gobject from macports (perhaps one of these two is redundant?)
+- gst-plugins-good from macports
+- py-beautifulsoup4 from macports
+- pyttsx by running the following command:
+    sudo easy_install pyttsx
+- cssselect by running the following command:
+    sudo easy_install cssselect
+- readability (requires cssselect) by running the following command:
+    sudo easy_install readability-lxml
+- sphinxbase from source code from CMU and sourceforge
+- pocketsphinx (requires sphinxbase) from source code from CMU and sourceforge
+  NOTE: if you are running Ubuntu, the most recent version of pocketsphinx in
+  Synaptic is 0.4.1, which was released in 2007. I kept getting segfaults from
+  this version when trying to parse finite state grammmars, so I instead
+  compiled and installed pocketsphinx and sphinxbase from source (version
+  0.8). To do this, I needed to install the Synaptic package
+  libgstreamer0.10-dev, because otherwise running ./configure before making
+  the sphinx libraries would decide that gstreamer was not installed and would
+  skip compiling/installing those pieces.
 
 Now, configure a few things:
  - in your .zshrc, set PYTHONPATH to include the place where gobject is:

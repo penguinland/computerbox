@@ -1,6 +1,10 @@
 # Python makes a bunch of JIT-compiled binaries for all the files it executes.
 # Don't put them in git.
 *.pyc
+# This is the location where news articles get cached; it gets updated by cron
+# jobs.
 cron_jobs/news_articles/*.txt
+# These are user-specific configuration files that should be updated for each
+# computer this gets installed on.
 computerbox/configuration.py
 cron_jobs/configuration.py
