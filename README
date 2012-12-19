@@ -53,3 +53,9 @@ Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
  - Using launchd and the .plist files in the cron_jobs/ directory is
    Mac-specific; you'll want to run those as cron jobs instead. Look at the
    README in that directory FMI.
+
+If you want to adapt the pocketsphinx acoustic model to your location (i.e.,
+teach it to ignore your air conditioner and learn your accent better and stuff),
+Ubuntu users will need to install the sox package, compile the sphinxtrain code
+from CMU's sourceforge page, and follow the instructions at
+http://cmusphinx.sourceforge.net/wiki/tutorialadapt

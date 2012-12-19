@@ -52,6 +52,11 @@ def Initialize():
   asr = pipeline.get_by_name('asr')
   asr.set_property('fsg', "%s.fsg" % filename)
   asr.set_property('dict', "%s.dic" % filename)
+  # Use a line like the following to test out an adapted model.
+  # FMI on adapting PocketSphinx to your particular environment/voice, see
+  # http://cmusphinx.sourceforge.net/wiki/tutorialadapt
+  #asr.set_property(
+  #    'hmm', "/home/alan/sphinx/sphinx_training/hub4wsj_sc_8kadapt")
   asr.connect('result', AsrResult)
   #asr.connect('partial_result', AsrPartialResult)
   asr.set_property('configured', True)
