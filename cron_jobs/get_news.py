@@ -36,6 +36,9 @@ def ParseArticleRSS(xml):
   #print xml
   article_match = re.search("<title>(.*) - (.*)</title>", xml)
   title = article_match.group(1)
+  # Get rid of anything after a |, since it's probably the website name and the
+  # TTS engine can't pronounce it.
+  title = re.sub("|.*$", "", title)
   paper = article_match.group(2).replace(".", " dot ")
   full_title = "%s, by %s" % (title, paper)
   url = re.search("<link>.*&amp;url=(.*)</link>", xml).group(1)

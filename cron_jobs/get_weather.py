@@ -15,9 +15,9 @@ def _SoupToText(soup):
   extremum = "high"
   if "ight" in period:  # Tonight, tomorrow night, etc.
     extremum = "low"
-  text = ("%s will be %s with a %s of %s." %
+  text = ("%s will be %s with a %s of %s. " %
           (period, conditions, extremum, temperature))
-  text = re.sub(unichr(0xb0) + "F", "degrees", text)
+  text = re.sub(unichr(0xb0) + r"F\s*", "degrees", text)
   return re.sub(r"\s+", " ", text)
 
 def GetWeather():
@@ -31,6 +31,7 @@ def GetWeather():
   f = open("%s/weather.txt" % configuration.NEWS_DIR, "w")
   f.write(_SoupToText(forecast[0]))
   f.write(_SoupToText(forecast[1]))
+  f.write("")  # End with a newline to make debugging easier
   f.close()
 
 if __name__ == "__main__":
