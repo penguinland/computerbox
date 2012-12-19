@@ -31,10 +31,6 @@ def Sleep():
   speaker.Acknowledge()
   sys.exit(3)
 
-def Pass():
-  # Make sure the user knows you caught the "never mind."
-  speaker.Acknowledge()
-
 def ExecuteCommand():
   print "getting command to execute..."
   speaker.Acknowledge()
@@ -51,7 +47,7 @@ def ExecuteCommand():
 
 def WakeUp():
   """
-  This is a perpetual loop that waits for the phrase "oh computer box" and then
+  This is a perpetual loop that waits for the phrase "oh computerbox" and then
   calls ExecuteCommand().
   """
   waker.Listen()
@@ -97,7 +93,7 @@ cl.AddCommand("WEATHER FORECAST", WeatherForecast)
 cl.AddCommand("NEVER MIND", speaker.Acknowledge)
 cl.AddCommand("GO TO SLEEP", Unimplemented)  # Sleep)
 cl.AddCommand("STOP LISTENING", Unimplemented)  # start_listening.DontListen)
-cl.AddCommand("WHAT TIME IS IT", speak_time.SpeakTime)  # start_listening.DontListen)
+cl.AddCommand("WHAT TIME IS IT", speak_time.SpeakTime)
 
 if __name__ == "__main__":
   WakeUp()
