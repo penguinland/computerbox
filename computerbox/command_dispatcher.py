@@ -8,6 +8,7 @@ import configuration
 import listener
 import read_news
 import speaker
+import speak_time
 # TODO: add this back in when it's working again.
 #import start_listening
 
@@ -96,6 +97,7 @@ cl.AddCommand("WEATHER FORECAST", WeatherForecast)
 cl.AddCommand("NEVER MIND", speaker.Acknowledge)
 cl.AddCommand("GO TO SLEEP", Unimplemented)  # Sleep)
 cl.AddCommand("STOP LISTENING", Unimplemented)  # start_listening.DontListen)
+cl.AddCommand("WHAT TIME IS IT", speak_time.SpeakTime)  # start_listening.DontListen)
 
 if __name__ == "__main__":
   WakeUp()

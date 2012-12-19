@@ -8,10 +8,10 @@ one file you need to modify.
 # file. Due to a quirk in PocketSphinx that I haven't worked out yet, it appears
 # that this needs to be fully specified; you can't use a tilde for your home
 # directory.
-DATA_DIR = "/home/alan/computerbox/computerbox/data"
+DATA_DIR = "/Users/alandavidson/computerbox/computerbox/data"
 
 # The directory where news articles are written by the cron jobs.
-NEWS_DIR = "/home/alan/computerbox/cron_jobs/news_articles"
+NEWS_DIR = "/Users/alandavidson/computerbox/cron_jobs/news_articles"
 
 # A mapping from mispronounced lowercased words to phonetic versions. Comments
 # are phonetic versions of the default pronunciation, to explain why the word

@@ -33,6 +33,8 @@ start.AddEdge(end, "NEVER MIND")
 
 start.AddEdge(end, "GO TO SLEEP")
 
+start.AddEdge(end, "WHAT TIME IS IT")
+
 # TODO: add in "calculate"
 
 fsg.PrintFSG()
