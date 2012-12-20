@@ -13,8 +13,10 @@ It also gets weather forecasts from the Weather Underground.
 
 import hashlib
 import re
+import readability
 import socket
 import urllib
+
 import article_to_text
 import configuration
 import get_weather
@@ -55,6 +57,9 @@ def GetArticles(rss):
     f.close()
   except IOError:
     # Retrieving the RSS feed timed out
+    return []
+  except readability.Unparseable:
+    # HTML is malformed?
     return []
   xml = xml.replace("\n", " ")
   article_matches = re.finditer("<item>(.*?)</item>", xml)

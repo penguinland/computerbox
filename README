@@ -16,6 +16,8 @@ It has a whole bunch of dependencies that you need to install:
     sudo easy_install cssselect
 - readability (requires cssselect) by running the following command:
     sudo easy_install readability-lxml
+  (note: Ubuntu users will first need to install the python-dev package for this
+  to work)
 - sphinxbase from source code from CMU and sourceforge
 - pocketsphinx (requires sphinxbase) from source code from CMU and sourceforge
   NOTE: if you are running Ubuntu, the most recent version of pocketsphinx in
@@ -28,31 +30,33 @@ It has a whole bunch of dependencies that you need to install:
   skip compiling/installing those pieces.
 
 Now, configure a few things:
- - in your .zshrc, set PYTHONPATH to include the place where gobject is:
-     export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
- - run the following two commands to load some stuff for gstreamer:
-     sudo launchctl load -w /Library/LaunchDaemons/org.freedesktop.dbus-system.plist
-     sudo launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
- - Go to the computerbox directory and edit configuration.py.
- - Go to the cron_jobs/ directory and edit get_news.py to change the directory
-   variable on line 26.
- - Go to the cron_jobs/ directory and add the .plist files to launchd:
-     launchctl load news_cron.plist
-     launchctl load remove_old_news.plist
+- in your .zshrc, set PYTHONPATH to include the place where gobject is:
+    export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
+- run the following two commands to load some stuff for gstreamer:
+    sudo launchctl load -w /Library/LaunchDaemons/org.freedesktop.dbus-system.plist
+    sudo launchctl load -w /Library/LaunchAgents/org.freedesktop.dbus-session.plist
+- Go to the computerbox directory and edit configuration.py.
+- Go to the cron_jobs/ directory and edit configuration.py there as well.
+- Run the following command so that git ignores modifications in
+  configuration.py files:
+    git update-index --assume-unchanged */configuration.py
+- Go to the cron_jobs/ directory and add the .plist files to launchd:
+    launchctl load news_cron.plist
+    launchctl load remove_old_news.plist
 
 Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
- - Much of the installation and configuration described above is probably
-   different.
- - In particular, adding cron-like jobs on other systems probably doesn't use
-   launchd and plists, so you're on your own setting up the stuff in the
-   cron_jobs directory.
- - In computerbox/speaker.py, near the bottom, change the way Acknowledge is
-   defined. There are two definitions of it (one setting it to _MacAcknowledge
-   and one setting it to _TtsAcknowledge); comment one out and uncomment the
-   other.
- - Using launchd and the .plist files in the cron_jobs/ directory is
-   Mac-specific; you'll want to run those as cron jobs instead. Look at the
-   README in that directory FMI.
+- Much of the installation and configuration described above is probably
+  different.
+- In particular, adding cron-like jobs on other systems probably doesn't use
+  launchd and plists, so you're on your own setting up the stuff in the
+  cron_jobs directory.
+- In computerbox/speaker.py, near the bottom, change the way Acknowledge is
+  defined. There are two definitions of it (one setting it to _MacAcknowledge
+  and one setting it to _TtsAcknowledge); comment one out and uncomment the
+  other.
+- Using launchd and the .plist files in the cron_jobs/ directory is
+  Mac-specific; you'll want to run those as cron jobs instead. Look at the
+  README in that directory FMI.
 
 If you want to adapt the pocketsphinx acoustic model to your location (i.e.,
 teach it to ignore your air conditioner and learn your accent better and stuff),

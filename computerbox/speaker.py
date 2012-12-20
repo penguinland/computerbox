@@ -13,6 +13,7 @@ The functions from here to use elsewhere are:
  - Speak(text) or Say(text) uses pyttsx to speak the text.
 """
 
+import os
 import pyttsx
 import re
 import subprocess
@@ -56,7 +57,7 @@ _engine.connect("finished-utterance", _HandleFinishedUtterance)
 _engine.connect("error", _HandleError)
 """
 
-def _TtsSpeak(text):
+def _PyttsSpeak(text):
   if re.search("[^a-zA-Z0-9#$%&()'\"/.,!?;:\t\n -]", text):
     print "erroneous text for speech engine:\n->%s<-" % text
     _engine.say(
@@ -67,6 +68,14 @@ def _TtsSpeak(text):
     _engine.say(text)
   _engine.runAndWait()
 
+def _PicoSpeak(text):
+  temp_file = "%s/tmp.wav" % configuration.NEWS_DIR
+  p = subprocess.Popen('pico2wave -w %s "%s" && play %s && rm %s' %
+                       (temp_file, text, temp_file, temp_file),
+                       shell=True)
+  # Wait until reading the text is finished before returning
+  os.waitpid(p.pid, 0)
+
 def Speak(text):
   # First, respell mispronounced words to be phonetic. Remove punctuation
   # before checking for corrected spelling. The regex is adapted from
@@ -75,7 +84,8 @@ def Speak(text):
   corrected_words = [_CorrectPronunciation(word) for word in pieces]
   corrected_text = "".join(corrected_words)
   print corrected_text
-  _TtsSpeak(corrected_text)
+  _PyttsSpeak(corrected_text)
+  #_PicoSpeak(corrected_text)
 
 Say = Speak  # Alternative name
 
