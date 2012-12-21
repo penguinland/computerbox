@@ -3,15 +3,19 @@ This file is for constants that get used in other places. This way, there's only
 one file you need to modify.
 """
 
+# The path to the root directory of the git repository. Probably the parent of
+# the directory this file is in.
+ROOT_DIR = "/home/alan/computerbox"
+
 # The path to the directory containing the .dic and .fsg files for speech
 # recognition. This is probably the data directory in the same location as this
 # file. Due to a quirk in PocketSphinx that I haven't worked out yet, it appears
 # that this needs to be fully specified; you can't use a tilde for your home
 # directory.
-DATA_DIR = "/home/alan/computerbox/computerbox/data"
+DATA_DIR = "%s/computerbox/data" % ROOT_DIR
 
 # The directory where news articles are written by the cron jobs.
-NEWS_DIR = "/home/alan/computerbox/cron_jobs/news_articles"
+NEWS_DIR = "%s/cron_jobs/news_articles" % ROOT_DIR
 
 # A mapping from mispronounced lowercased words to phonetic versions. Comments
 # are phonetic versions of the default pronunciation, to explain why the word

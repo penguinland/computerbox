@@ -70,7 +70,7 @@ def _PyttsSpeak(text):
 
 def _PicoSpeak(text):
   temp_file = "%s/tmp.wav" % configuration.NEWS_DIR
-  p = subprocess.Popen('pico2wave -w %s "%s" && play %s && rm %s' %
+  p = subprocess.Popen('pico2wave -w %s "%s" && play -q %s && rm %s' %
                        (temp_file, text, temp_file, temp_file),
                        shell=True)
   # Wait until reading the text is finished before returning
@@ -84,8 +84,8 @@ def Speak(text):
   corrected_words = [_CorrectPronunciation(word) for word in pieces]
   corrected_text = "".join(corrected_words)
   print corrected_text
-  _PyttsSpeak(corrected_text)
-  #_PicoSpeak(corrected_text)
+  #_PyttsSpeak(corrected_text)
+  _PicoSpeak(corrected_text)
 
 Say = Speak  # Alternative name
 
@@ -98,9 +98,19 @@ def _MacAcknowledge():
   # Return during that silence, rather than waiting for the whole thing.
   time.sleep(0.5)
 
+def _LinuxPurrAcknowledge():
+  # I'm not going to include this file because I can't tell if it's open source
+  # or not; find a pleasing sound yourself.
+  p = subprocess.Popen("play -q %s/private/Purr.aiff" % configuration.ROOT_DIR,
+                       shell=True)
+  # The sound is half a second long, followed by half a second of silence.
+  # Return during that silence, rather than waiting for the whole thing.
+  time.sleep(0.5)
+
 # For non-Mac users, change which of these is commented out.
-Acknowledge = _MacAcknowledge
+#Acknowledge = _MacAcknowledge
 #Acknowledge = _TtsAcknowledge
+Acknowledge = _LinuxPurrAcknowledge
 
 if __name__ == "__main__":
   # Example tests

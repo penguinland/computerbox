@@ -12,6 +12,7 @@ def _SoupToText(soup):
   # This next line uses contents()[0] instead of get_text() to get rid of the
   # part about 20% chance of rain or whatever.
   conditions = soup("div", "foreCondition")[0].contents[0]
+  conditions = conditions.replace("T-storms", "thunderstorms")
   extremum = "high"
   if "ight" in period:  # Tonight, tomorrow night, etc.
     extremum = "low"
