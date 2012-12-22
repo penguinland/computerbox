@@ -14,14 +14,15 @@ The functions from here to use elsewhere are:
 """
 
 import os
-import pyttsx
 import re
 import subprocess
 import time
 
 import configuration
 
-_engine = pyttsx.init()
+if configuration.CURRENT_OS == configuration.MAC_OSX:
+  import pyttsx
+  _engine = pyttsx.init()
 
 def _CorrectPronunciation(word):
   """
@@ -49,7 +50,7 @@ def _HandleError(name, exc):
   print "exception is %s" % exc
   raise exc
 
-# The next four lines are useful for debugging problems.
+# The next four lines are useful for debugging problems with PYTTSX.
 """
 _engine.connect("started-utterance", _HandleStartedUtterance)
 _engine.connect("started-word", _HandleStartedWord)
@@ -84,8 +85,8 @@ def Speak(text):
   corrected_words = [_CorrectPronunciation(word) for word in pieces]
   corrected_text = "".join(corrected_words)
   print corrected_text
-  #_PyttsSpeak(corrected_text)
-  _PicoSpeak(corrected_text)
+  # The preferred implementation of speech is OS dependent; see below.
+  _SpeakImpl(corrected_text)
 
 Say = Speak  # Alternative name
 
@@ -99,18 +100,25 @@ def _MacAcknowledge():
   time.sleep(0.5)
 
 def _LinuxPurrAcknowledge():
-  # I'm not going to include this file because I can't tell if it's open source
-  # or not; find a pleasing sound yourself.
+  # I'm not going to include this file in the repository because I can't tell if
+  # it's open source or not. Find a pleasing sound yourself instead.
   p = subprocess.Popen("play -q %s/private/Purr.aiff" % configuration.ROOT_DIR,
                        shell=True)
   # The sound is half a second long, followed by half a second of silence.
   # Return during that silence, rather than waiting for the whole thing.
   time.sleep(0.5)
 
-# For non-Mac users, change which of these is commented out.
-#Acknowledge = _MacAcknowledge
-#Acknowledge = _TtsAcknowledge
-Acknowledge = _LinuxPurrAcknowledge
+# Now, pick which implementation to use based on what OS we're running.
+if configuration.CURRENT_OS == configuration.MAC_OSX:
+  Acknowledge = _MacAcknowledge
+  _SpeakImpl = _PyttsSpeak
+elif configuration.CURRENT_OS == configuration.LINUX:
+  #Acknowledge = _TtsAcknowledge
+  Acknowledge = _LinuxPurrAcknowledge
+  #_SpeakImpl = _PyttsSpeak
+  _SpeakImpl = _PicoSpeak
+else:
+  raise NotImplementedError("unknown value of configuration.CURRENT_OS")
 
 if __name__ == "__main__":
   # Example tests

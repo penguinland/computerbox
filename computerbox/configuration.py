@@ -3,17 +3,20 @@ This file is for constants that get used in other places. This way, there's only
 one file you need to modify.
 """
 
+LINUX = 11
+MAC_OSX = 12
+
+# Change the following line to your operating system.
+CURRENT_OS = LINUX
+
 # The path to the root directory of the git repository. Probably the parent of
-# the directory this file is in.
+# the directory that this file is in. Due to a quirk in PocketSphinx that I
+# haven't figured out yet, it appears that this needs to be fully specified; you
+# can't use a tilde for your home directory.
 ROOT_DIR = "/home/alan/computerbox"
 
-# The path to the directory containing the .dic and .fsg files for speech
-# recognition. This is probably the data directory in the same location as this
-# file. Due to a quirk in PocketSphinx that I haven't worked out yet, it appears
-# that this needs to be fully specified; you can't use a tilde for your home
-# directory.
+# The directory where .fsg and .dic files are stored
 DATA_DIR = "%s/computerbox/data" % ROOT_DIR
-
 # The directory where news articles are written by the cron jobs.
 NEWS_DIR = "%s/cron_jobs/news_articles" % ROOT_DIR
 
