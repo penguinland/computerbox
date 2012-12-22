@@ -6,11 +6,12 @@ to be installed. It also uses PRONUNCIATION_CORRECTIONS in configuration.py; and
 if any words are mispronounced, add them there.
 
 The functions from here to use elsewhere are:
- -  Acknowledge() is a way for the computer to indicate that it has done
-    something. There are Mac- and nonMac-specific versions of this; look near
-    the bottom to see where they're defined and change from using one to the
-    other.
- - Speak(text) or Say(text) uses pyttsx to speak the text.
+-  Acknowledge() is a way for the computer to indicate that it has done
+   something. The default Linux version requires a sound file not included in
+   this repository; look near the bottom of this file and either change to using
+   _TtsAcknowledge or get that sound file yourself.
+- Speak(text) uses pyttsx to speak the text.
+- SpeakFile(filename) opens that text file and reads its contents.
 """
 
 import os
@@ -21,7 +22,7 @@ import time
 
 import configuration
 
-if sys.patform.startswith("darwin"):  # Mac OSX
+if sys.platform.startswith("darwin"):  # Mac OSX
   import pyttsx
   _engine = pyttsx.init()
 
@@ -59,6 +60,17 @@ _engine.connect("finished-utterance", _HandleFinishedUtterance)
 _engine.connect("error", _HandleError)
 """
 
+def Speak(text):
+  # First, respell mispronounced words to be phonetic. Remove punctuation
+  # before checking for corrected spelling. The regex is adapted from
+  # http://stackoverflow.com/questions/367155
+  pieces = re.findall(r"[\w']+|[^\w']+", text)
+  corrected_words = [_CorrectPronunciation(word) for word in pieces]
+  corrected_text = "".join(corrected_words)
+  print corrected_text
+  # The preferred implementation of speech is OS dependent; see below.
+  _SpeakImpl(corrected_text)
+
 def _PyttsSpeak(text):
   if re.search("[^a-zA-Z0-9#$%&()'\"/.,!?;:\t\n -]", text):
     print "erroneous text for speech engine:\n->%s<-" % text
@@ -78,19 +90,6 @@ def _PicoSpeak(text):
   # Wait until reading the text is finished before returning
   os.waitpid(p.pid, 0)
 
-def Speak(text):
-  # First, respell mispronounced words to be phonetic. Remove punctuation
-  # before checking for corrected spelling. The regex is adapted from
-  # http://stackoverflow.com/questions/367155
-  pieces = re.findall(r"[\w']+|[^\w']+", text)
-  corrected_words = [_CorrectPronunciation(word) for word in pieces]
-  corrected_text = "".join(corrected_words)
-  print corrected_text
-  # The preferred implementation of speech is OS dependent; see below.
-  _SpeakImpl(corrected_text)
-
-Say = Speak  # Alternative name
-
 def _TtsAcknowledge():
   Speak("acknowledged.")
 
@@ -109,15 +108,32 @@ def _LinuxPurrAcknowledge():
   # Return during that silence, rather than waiting for the whole thing.
   time.sleep(0.5)
 
+def _NaiveSpeakFile(filename):
+  f = open(filename)
+  text = f.read()
+  f.close()
+  if len(text) == 0:
+    Speak("File has no contents.")
+  else:
+    Speak(text)
+
+def _CachedSpeakFile(filename):
+  wav_filename = "%s.wav" % filename[:-4]
+  p = subprocess.Popen("play -q %s" % wav_filename, shell=True)
+  # Wait until reading the text is finished before returning
+  os.waitpid(p.pid, 0)
+
 # Now, pick which implementation to use based on what OS we're running.
-if sys.patform.startswith("darwin"):  # Mac OSX
+if sys.platform.startswith("darwin"):  # Mac OSX
   Acknowledge = _MacAcknowledge
   _SpeakImpl = _PyttsSpeak
-elif sys.patform.startswith("linux"):
+  SpeakFile = _NaiveSpeakFile
+elif sys.platform.startswith("linux"):
   #Acknowledge = _TtsAcknowledge
   Acknowledge = _LinuxPurrAcknowledge
-  #_SpeakImpl = _PyttsSpeak
+  #_SpeakImpl = _PyttsSpeak  # Works on Linux but sounds ugly
   _SpeakImpl = _PicoSpeak
+  SpeakFile = _NaiveSpeakFile
 else:
   raise NotImplementedError("unsupported operating system: %s" % os.platform)
 

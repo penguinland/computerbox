@@ -23,7 +23,6 @@ def _ReadNews(stories):
   i = 0
   while i < len(stories):
     story = stories[i]
-    print "headline: %s" % story.headline
     speaker.Speak(story.headline)
     cl.ClearCommands()
     cl.Listen()
@@ -56,15 +55,7 @@ def _ReadNews(stories):
 
 def _ReadArticle(story):
   print story.location
-  f = open(story.location)
-  contents = f.read()
-  f.close()
-  if len(contents) == 0:
-    speaker.Speak("Article has no contents.")
-  else:
-    print "Speaking contents:"
-    #print contents
-    speaker.Speak(contents)
+  speaker.SpeakFile(story.location)
   time.sleep(1)  # Pause at the end of the article
   speaker.Speak("Resuming Headlines.")
   time.sleep(0.5)

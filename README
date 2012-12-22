@@ -47,16 +47,19 @@ Now, configure a few things:
 Here are (some of) the Mac-specific parts that need to be changed for non-Macs:
 - Much of the installation and configuration described above is probably
   different.
-- In particular, adding cron-like jobs on other systems probably doesn't use
-  launchd and plists, so you're on your own setting up the stuff in the
-  cron_jobs directory.
-- In computerbox/speaker.py, near the bottom, change the way Acknowledge is
-  defined. There are two definitions of it (one setting it to _MacAcknowledge
-  and one setting it to _TtsAcknowledge); comment one out and uncomment the
-  other.
 - Using launchd and the .plist files in the cron_jobs/ directory is
   Mac-specific; you'll want to run those as cron jobs instead. Look at the
   README in that directory FMI.
+- This works if you've got pyttsx installed on Linux, but sounds ugly. For a
+  better voice, install pico2wave in the Ubuntu package libttspico-utils. Note:
+  if you don't do this and want to stick with pyttsx, edit
+  computerbox/speaker.py towards the bottom where _SpeakImpl is defined for
+  Linux.
+- In computerbox/speaker.py, near the bottom, change the way Acknowledge is
+  defined. There are two definitions of it, one setting it to _TtsAcknowledge
+  and one setting it to _LinuxPurrAcknowledge, which is the currently used one.
+  I haven't included the purr sound, so either get it yourself or switch to
+  using _TtsAcknowledge.
 
 If you want to adapt the pocketsphinx acoustic model to your location (i.e.,
 teach it to ignore your air conditioner and learn your accent better and stuff),

@@ -18,10 +18,7 @@ def Unimplemented():
   speaker.Acknowledge()
 
 def WeatherForecast():
-  f = open("%s/weather.txt" % configuration.NEWS_DIR)
-  forecast = f.read()
-  f.close()
-  speaker.Speak(forecast)
+  speaker.SpeakFile("%s/weather.txt" % configuration.NEWS_DIR)
 
 def Sleep():
   """
