@@ -6,6 +6,9 @@
 # jobs.
 cron_jobs/news_articles/*.txt
 
-# These are user-specific configuration files that should be updated for each
-# computer this gets installed on.
-configuration.py
+# Don't mention configuration.py files here; they _should_ go in the repository.
+# However, changes to them shouldn't usually be tracked, so instead you should
+#   git update-index --assume-unchanged */configuration.py
+# and if necessary when making changes to those files,
+#   git update-index --no-assume-unchanged configuration.py
+# to track the changes again.
