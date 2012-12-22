@@ -3,12 +3,6 @@ This file is for constants that get used in other places. This way, there's only
 one file you need to modify.
 """
 
-LINUX = 11
-MAC_OSX = 12
-
-# Change the following line to your operating system.
-CURRENT_OS = LINUX
-
 # The path to the root directory of the git repository. Probably the parent of
 # the directory that this file is in. Due to a quirk in PocketSphinx that I
 # haven't figured out yet, it appears that this needs to be fully specified; you

@@ -16,11 +16,12 @@ The functions from here to use elsewhere are:
 import os
 import re
 import subprocess
+import sys
 import time
 
 import configuration
 
-if configuration.CURRENT_OS == configuration.MAC_OSX:
+if sys.patform.startswith("darwin"):  # Mac OSX
   import pyttsx
   _engine = pyttsx.init()
 
@@ -109,16 +110,16 @@ def _LinuxPurrAcknowledge():
   time.sleep(0.5)
 
 # Now, pick which implementation to use based on what OS we're running.
-if configuration.CURRENT_OS == configuration.MAC_OSX:
+if sys.patform.startswith("darwin"):  # Mac OSX
   Acknowledge = _MacAcknowledge
   _SpeakImpl = _PyttsSpeak
-elif configuration.CURRENT_OS == configuration.LINUX:
+elif sys.patform.startswith("linux"):
   #Acknowledge = _TtsAcknowledge
   Acknowledge = _LinuxPurrAcknowledge
   #_SpeakImpl = _PyttsSpeak
   _SpeakImpl = _PicoSpeak
 else:
-  raise NotImplementedError("unknown value of configuration.CURRENT_OS")
+  raise NotImplementedError("unsupported operating system: %s" % os.platform)
 
 if __name__ == "__main__":
   # Example tests
