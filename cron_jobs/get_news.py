@@ -15,7 +15,13 @@ import hashlib
 import re
 import readability
 import socket
+import sys
 import urllib
+
+if sys.platform.startswith("linux"):
+  # Rendering large amounts of text with pico2wave can be slow (ones of
+  # seconds), so we will pre-render now instead of when the user wants it.
+  import text_to_wave
 
 import article_to_text
 import configuration
@@ -58,11 +64,12 @@ def GetArticles(rss):
   except IOError:
     # Retrieving the RSS feed timed out
     return []
-  except readability.Unparseable:
+  except readability.readability.Unparseable:
     # HTML is malformed?
     return []
   xml = xml.replace("\n", " ")
   article_matches = re.finditer("<item>(.*?)</item>", xml)
+
   return [ParseArticleRSS(piece.group(1)) for piece in article_matches]
 
 def GetArticleText(url, filename):
@@ -71,18 +78,21 @@ def GetArticleText(url, filename):
   in the news_articles directory.
   """
   # TODO: don't bother overwriting if the file already exists.
+  full_filename = "%s/%s.txt" % (configuration.NEWS_DIR, filename)
   text = article_to_text.FormatArticle(url)
   # TODO: if the article is empty or is 1 line long with the phrase "access
   # denied" in it, don't bother adding it to the index directory.
   # TODO: figure out why I sometimes get empty articles or "access denied"
   # errors. These sites work perfectly fine in Firefox when I disable cookies,
   # javascript, and flash; what is different between that and my downloader?
-  article_file = open("%s/%s.txt" % (configuration.NEWS_DIR, filename), "w")
+  article_file = open(full_filename, "w")
   # TODO: if the last line of the article is less than 80 characters long and
   # contains an @ symbol, don't write it out, because it's just the contact
   # info of the editors or whatever.
   article_file.write(text)
   article_file.close()
+  if sys.platform.startswith("linux"):
+    text_to_wave.Convert(full_filename, text)
 
 def StoreArticle(article_tuple, file):
   """
@@ -101,6 +111,9 @@ def StoreArticle(article_tuple, file):
     file.write("%s\t%s\n" % (title, file_hash))
   except IOError:
     # Retrieving the article timed out; skip it.
+    pass
+  except readability.readability.Unparseable:
+    # HTML is malformed; ignore this article
     pass
 
 def StoreArticles(article_list, filename):

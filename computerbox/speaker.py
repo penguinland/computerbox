@@ -118,10 +118,32 @@ def _NaiveSpeakFile(filename):
     Speak(text)
 
 def _CachedSpeakFile(filename):
+  """
+  Calling pico2wave on large pieces of text adds a noticeable delay while the
+  sound is rendered. Consequently, we prefer to prerender the sound when we
+  download text in the cron jobs, and here we just play the sound files. Note
+  that this is not a problem with pyttsx, because it can stream the sound (i.e.,
+  it can start playing sound before it's finished rendering the entire thing).
+  """
+  f = open(filename)
+  text = f.read()
+  f.close()
+  if len(text) == 0:
+    Speak("File has no contents.")
+    return
+  print text
+
   wav_filename = "%s.wav" % filename[:-4]
   p = subprocess.Popen("play -q %s" % wav_filename, shell=True)
-  # Wait until reading the text is finished before returning
-  os.waitpid(p.pid, 0)
+  # Wait until reading the text is finished before returning.  The return value
+  # of the process is the high-order byte of the second part of the returned
+  # tuple.
+  return_value = os.waitpid(p.pid, 0)[1] >> 8
+  if return_value == 2:
+    # Couldn't find the .wav file to play; fall back on the naive approach.
+    print ("WARNING: Expected to play .wav file %s, but file didn't exist." %
+           wav_filename)
+    _NaiveSpeakFile(filename)
 
 # Now, pick which implementation to use based on what OS we're running.
 if sys.platform.startswith("darwin"):  # Mac OSX
@@ -133,7 +155,7 @@ elif sys.platform.startswith("linux"):
   Acknowledge = _LinuxPurrAcknowledge
   #_SpeakImpl = _PyttsSpeak  # Works on Linux but sounds ugly
   _SpeakImpl = _PicoSpeak
-  SpeakFile = _NaiveSpeakFile
+  SpeakFile = _CachedSpeakFile
 else:
   raise NotImplementedError("unsupported operating system: %s" % os.platform)
 

@@ -9,10 +9,11 @@ then we can quickly read it back when prompted later.
 The news_articles/ directory is somewhat like a cache of local articles: it is
 written to by these cron jobs, and read from in the main computerbox program.
 
-If you're not on a Mac and can't use launchd and the included .plist files, you
-probably want a cron job that deletes old files from the news_articles/
-directory. Here's a function to do that for you:
-    find /path/to/files* -mtime +7 -exec rm {} \;
+If you're not on a Mac and thus can't use launchd and the included .plist files,
+you probably want a cron job that deletes old files from the news_articles/
+directory. Use the following two functions to do that for you:
+    find /path/to/files/*.txt -mtime +7 -exec rm {} \;
+    find /path/to/files/*.wav -mtime +7 -exec rm {} \;
 The 7 takes out anything over a week old. Note the spaces after rm and {}
 
 Files in this directory:

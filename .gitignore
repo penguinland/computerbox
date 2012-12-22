@@ -5,6 +5,7 @@
 # This is the location where news articles get cached; it gets updated by cron
 # jobs.
 cron_jobs/news_articles/*.txt
+cron_jobs/news_articles/*.wav
 
 # Don't mention configuration.py files here; they _should_ go in the repository.
 # However, changes to them shouldn't usually be tracked, so instead you should
