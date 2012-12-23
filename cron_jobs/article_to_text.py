@@ -178,8 +178,5 @@ def FormatArticle(url):
   # all pages together. It might help to take the HTML of the first page, look
   # for a "print this page" link, and grab the HTML from _that_ page for
   # processing.
-
-  # TODO: put this in a try block and return early if it throws an IOError
-  # because the socket timed out.
   html = urllib.urlopen(url).read()
   return ExtractText(html)
