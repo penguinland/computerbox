@@ -10,6 +10,8 @@ The gen directory stores programs that generate the finite state grammars stored
 in the data directory.
 
 Individual files:
+- configuration.py contains constants used throughout this directory. You should
+  edit it before doing anything else.
 - demo_test.py is a way to check if gstreamer and PocketSphinx are set up
   correctly. It's also a way of trying out any new sets of commands you put
   in the data directory.
