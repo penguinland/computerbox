@@ -1,9 +1,11 @@
 # Python makes a bunch of JIT-compiled binaries for all the files it executes.
 # Don't put them in git.
 *.pyc
+*.swp
 
 # This is the location where news articles get cached; it gets updated by cron
 # jobs.
+cron_jobs/news_articles/cron_log
 cron_jobs/news_articles/*.txt
 cron_jobs/news_articles/*.wav
 
