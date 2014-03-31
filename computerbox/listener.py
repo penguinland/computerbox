@@ -64,7 +64,9 @@ class CommandListener(object):
     # would be much better. Look into gst_element_set_state(), which might do
     # this?
     self.pipeline = gst.parse_launch(
-        "gconfaudiosrc ! audioconvert ! audioresample ! " +
+        "pulsesrc ! " +
+        #"gconfaudiosrc ! " +
+        "audioconvert ! audioresample ! " +
         "vader name=vad auto-threshold=true ! " +
         ("pocketsphinx name=%s ! " % name) +
         "fakesink")

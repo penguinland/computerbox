@@ -91,8 +91,8 @@ def GetArticleText(url, filename):
   # info of the editors or whatever.
   article_file.write(text)
   article_file.close()
-  if sys.platform.startswith("linux"):
-    text_to_wave.Convert(full_filename, text)
+  #if sys.platform.startswith("linux"):
+  #  text_to_wave.Convert(full_filename, text)
 
 def StoreArticle(article_tuple, file):
   """

@@ -29,7 +29,9 @@ import configuration
 # the other files in this directory.
 
 pipeline = gst.parse_launch(
-  "gconfaudiosrc ! audioconvert ! audioresample ! " +
+  "gconfaudiosrc ! " +
+  #"pulsesrc ! " +
+  "audioconvert ! audioresample ! " +
   "vader name=vad auto-threshold=true ! pocketsphinx name=asr ! " +
   "fakesink")
 
@@ -58,7 +60,7 @@ def Initialize():
   #asr.set_property(
   #    'hmm', "/home/alan/sphinx/sphinx_training/hub4wsj_sc_8kadapt")
   asr.connect('result', AsrResult)
-  #asr.connect('partial_result', AsrPartialResult)
+  asr.connect('partial_result', AsrPartialResult)
   asr.set_property('configured', True)
 
   pipeline.set_state(gst.STATE_PLAYING)
