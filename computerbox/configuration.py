@@ -35,3 +35,6 @@ PRONUNCIATION_CORRECTIONS = {
   "sc" : "south carolina",  # ess see
   }
 
+# The name of the echo-cancelled PulseAudio source, found by running
+#   pacmd list-sources|grep echo | grep name | grep -v monitor|sed 's/^.* <//'|sed 's/>//'
+PULSESRC_NAME = "alsa_input.pci-0000_00_1b.0.analog-stereo.echo-cancel"

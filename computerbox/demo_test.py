@@ -29,18 +29,16 @@ import configuration
 # the other files in this directory.
 
 pipeline = gst.parse_launch(
-  "gconfaudiosrc ! " +
-  #"pulsesrc ! " +
+  #"gconfaudiosrc ! " +
+  ("pulsesrc device=%s ! " % configuration.PULSESRC_NAME) +
   "audioconvert ! audioresample ! " +
   "vader name=vad auto-threshold=true ! pocketsphinx name=asr ! " +
   "fakesink")
 
 def AsrResult(asr, text, uttid):
-  """Forward result signals on the bus to the main thread."""
   print "\nGot result: %s\n" % text
 
 def AsrPartialResult(asr, text, uttid):
-  """Forward result signals on the bus to the main thread."""
   print "\nGot partial result: %s\n" % text
 
 def Initialize():
@@ -62,7 +60,6 @@ def Initialize():
   asr.connect('result', AsrResult)
   asr.connect('partial_result', AsrPartialResult)
   asr.set_property('configured', True)
-
   pipeline.set_state(gst.STATE_PLAYING)
 
 Initialize()

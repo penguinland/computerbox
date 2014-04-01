@@ -30,6 +30,8 @@ It has a whole bunch of dependencies that you need to install:
   skip compiling/installing those pieces.
 
 Now, configure a few things:
+- Set up echo cancellation through PulseAudio, by following the instructions at
+  http://tinyurl.com/l7km64c to modify /etc/pulse/default.pa and restart PA.
 - in your .zshrc, set PYTHONPATH to include the place where gobject is:
     export PYTHONPATH=/opt/local/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/site-packages
 - run the following two commands to load some stuff for gstreamer:
