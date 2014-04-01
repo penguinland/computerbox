@@ -9,6 +9,8 @@ cron_jobs/news_articles/cron_log
 cron_jobs/news_articles/*.txt
 cron_jobs/news_articles/*.wav
 
+private/*
+
 # Don't mention configuration.py files here; they _should_ go in the repository.
 # However, changes to them shouldn't usually be tracked, so instead you should
 #   git update-index --assume-unchanged */configuration.py
