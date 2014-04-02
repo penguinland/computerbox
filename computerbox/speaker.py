@@ -11,7 +11,7 @@ The functions from here to use elsewhere are:
    this repository; look near the bottom of this file and either change to using
    _TtsAcknowledge or get that sound file yourself.
 - Speak(text) uses pyttsx to speak the text.
-- SpeakFile(filename) opens that text file and reads its contents.
+- SpeakFile(filename) opens that text file and speaks its contents.
 """
 
 import os

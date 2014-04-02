@@ -33,13 +33,15 @@ throw a fit.
 
 import gobject
 import pygst
-pygst.require('0.10')
+pygst.require("0.10")
 gobject.threads_init()
 import gst
 
 import Queue
 
 import configuration
+
+VERBOSE = True
 
 class CommandListener(object):
   def __init__(self, name):
@@ -64,7 +66,7 @@ class CommandListener(object):
     # would be much better. Look into gst_element_set_state(), which might do
     # this?
     self.pipeline = gst.parse_launch(
-        "pulsesrc ! " +
+        ("pulsesrc device=%s ! " % configuration.PULSESRC_NAME) +
         #"gconfaudiosrc ! " +
         "audioconvert ! audioresample ! " +
         "vader name=vad auto-threshold=true ! " +
@@ -73,10 +75,11 @@ class CommandListener(object):
 
     whole_filename = "%s/%s" % (configuration.DATA_DIR, name)
     asr = self.pipeline.get_by_name(name)
-    asr.set_property('fsg', "%s.fsg" % whole_filename)
-    asr.set_property('dict', "%s.dic" % whole_filename)
-    asr.connect('result', self._EnqueueCommand)
-    asr.set_property('configured', True)
+    asr.set_property("fsg", "%s.fsg" % whole_filename)
+    asr.set_property("dict", "%s.dic" % whole_filename)
+    asr.connect("result", self._EnqueueCommand)
+    asr.connect("partial_result", self._HandlePartialResult)
+    asr.set_property("configured", True)
     self.pipeline.set_state(gst.STATE_PAUSED)
 
   def AddCommand(self, phrase, value):
@@ -87,9 +90,15 @@ class CommandListener(object):
     self.command_queue = Queue.Queue()
 
   def Listen(self):
+    if VERBOSE:
+      print "Switching to new listener. Valid commands are:"
+      for command in self.command_registry:
+        print command
     self.pipeline.set_state(gst.STATE_PLAYING)
 
   def Pause(self):
+    if VERBOSE:
+      print "Turning listener off..."
     self.pipeline.set_state(gst.STATE_PAUSED)
 
   def HasCommand(self):
@@ -106,11 +115,17 @@ class CommandListener(object):
   def BlockingGetCommand(self):
     return self.command_queue.get(True)  # True = block until ready
 
+  def _HandlePartialResult(self, asr, text, uttid):
+    if VERBOSE:
+      print "Got partial result from pocketsphinx: %s" % text
+
   def _EnqueueCommand(self, asr, text, uttid):
     """
     This should only be called by the gstreamer pipeline when it recognizes
     spoken text.
     """
+    if VERBOSE:
+      print "Got command from pocketsphinx: %s" % text
     if text in self.command_registry:
       self.command_queue.put(self.command_registry[text])
     else:
