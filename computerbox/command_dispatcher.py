@@ -13,8 +13,8 @@ import speak_time
 #import start_listening
 
 def Unimplemented():
-  speaker.Speak("This command is not yet implemented in the git "
-                "hub version of this project. Ignoring command.")
+  speaker.Speak("This command is not yet implemented in the github "
+                "version of this project. Ignoring command.")
   speaker.Acknowledge()
 
 def WeatherForecast():
@@ -31,7 +31,7 @@ def Sleep():
   speaker.Acknowledge()
   sys.exit(3)
 
-def ExecuteCommand():
+def ExecuteCommand(cl):
   print "getting command to execute..."
   speaker.Acknowledge()
   print "acknowledged"
@@ -50,6 +50,9 @@ def WakeUp():
   This is a perpetual loop that waits for the phrase "oh computerbox" and then
   calls ExecuteCommand().
   """
+  waker = MakeWaker()
+  cl = MakeCommandListener()
+
   waker.Listen()
   while True:
     print "back in main while loop..."
@@ -57,7 +60,7 @@ def WakeUp():
     if cmd == LISTEN:
       print "listening for command!"
       waker.Pause()
-      ExecuteCommand()
+      ExecuteCommand(cl)
       time.sleep(1)  # Avoid a race condition in gst?
       waker.Listen()
     elif cmd == UNKNOWN:
@@ -70,30 +73,34 @@ def WakeUp():
 UNKNOWN = 10
 LISTEN = 11
 
-# The waker is the thing that listens for the phrase "oh computerbox" and gets
-# the system ready to receive a command, while ignoring all other noise.
-waker = listener.CommandListener("ohcomputer")
-waker.AddCommand("UNK", UNKNOWN)
-waker.AddCommand("OH COMPUTER BOX", LISTEN)
+def MakeWaker():
+  # The waker is the thing that listens for the phrase "oh computerbox" and gets
+  # the system ready to receive a command, while ignoring all other noise.
+  waker = listener.CommandListener("ohcomputer")
+  waker.AddCommand("UNK", UNKNOWN)
+  waker.AddCommand("OH COMPUTER BOX", LISTEN)
+  return waker
 
-# This is the thing that deals with all the different commands you might give
-# after saying "oh computerbox." It maps phrases we might hear to nullary
-# functions to execute.
-cl = listener.CommandListener("command")
-cl.AddCommand("READ ME SCIENCE HEADLINES", read_news.ReadScienceNews)
-cl.AddCommand("READ ME YOU ESS HEADLINES", read_news.ReadUSNews)
-cl.AddCommand("READ ME WORLD HEADLINES", read_news.ReadWorldNews)
-cl.AddCommand("READ ME ALL HEADLINES", read_news.ReadAllNews)
-cl.AddCommand("READ ME SCIENCE NEWS", read_news.ReadScienceNews)
-cl.AddCommand("READ ME YOU ESS NEWS", read_news.ReadUSNews)
-cl.AddCommand("READ ME WORLD NEWS", read_news.ReadWorldNews)
-cl.AddCommand("READ ME ALL NEWS", read_news.ReadAllNews)
-cl.AddCommand("WEATHER REPORT", WeatherForecast)
-cl.AddCommand("WEATHER FORECAST", WeatherForecast)
-cl.AddCommand("NEVER MIND", speaker.Acknowledge)
-cl.AddCommand("GO TO SLEEP", Unimplemented)  # Sleep)
-cl.AddCommand("STOP LISTENING", Unimplemented)  # start_listening.DontListen)
-cl.AddCommand("WHAT TIME IS IT", speak_time.SpeakTime)
+def MakeCommandListener():
+  # This is the thing that deals with all the different commands you might give
+  # after saying "oh computerbox." It maps phrases we might hear to nullary
+  # functions to execute.
+  cl = listener.CommandListener("command")
+  cl.AddCommand("READ ME SCIENCE HEADLINES", read_news.ReadScienceNews)
+  cl.AddCommand("READ ME YOU ESS HEADLINES", read_news.ReadUSNews)
+  cl.AddCommand("READ ME WORLD HEADLINES", read_news.ReadWorldNews)
+  cl.AddCommand("READ ME ALL HEADLINES", read_news.ReadAllNews)
+  cl.AddCommand("READ ME SCIENCE NEWS", read_news.ReadScienceNews)
+  cl.AddCommand("READ ME YOU ESS NEWS", read_news.ReadUSNews)
+  cl.AddCommand("READ ME WORLD NEWS", read_news.ReadWorldNews)
+  cl.AddCommand("READ ME ALL NEWS", read_news.ReadAllNews)
+  cl.AddCommand("WEATHER REPORT", WeatherForecast)
+  cl.AddCommand("WEATHER FORECAST", WeatherForecast)
+  cl.AddCommand("NEVER MIND", speaker.Acknowledge)
+  cl.AddCommand("GO TO SLEEP", Unimplemented)  # Sleep)
+  cl.AddCommand("STOP LISTENING", Unimplemented)  # start_listening.DontListen)
+  cl.AddCommand("WHAT TIME IS IT", speak_time.SpeakTime)
+  return cl
 
 if __name__ == "__main__":
   WakeUp()
