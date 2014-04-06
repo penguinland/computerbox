@@ -40,47 +40,30 @@ import gst
 import Queue
 
 import configuration
+import time
 
 VERBOSE = True
+
+_in_use = False
+_pipeline = gst.parse_launch(
+    ("pulsesrc device=%s ! " % configuration.PULSESRC_NAME) +
+    #"gconfaudiosrc ! " +
+    "audioconvert ! audioresample ! " +
+    "vader name=vad auto-threshold=true ! " +
+    "pocketsphinx name=asr ! " +
+    "fakesink")
+_pipeline.set_state(gst.STATE_PAUSED)
 
 class CommandListener(object):
   def __init__(self, name):
     self.command_queue = Queue.Queue()  # Must be threadsafe
     self.command_registry = {}  # Mapping from spoken phrases to return values
-
-    # My first instinct was to try to turn this pipeline into a tree, so that we
-    # only have one audioconvert and resample and vader for all the different
-    # listeners. Duplicating the early stages of the pipeline isn't a big deal
-    # computationally as long as most of the listeners are paused most of the
-    # time, so the current approach isn't so bad. It might be a memory hog, but
-    # might not be; look into this if it becomes a problem.
-    # UPDATE: It _is_ possible to share most of the pipeline! There's a
-    # gstreamer element called tee that does 1-to-many conversions. Look at its
-    # implementation at
-    # http://mediatools.cs.ucl.ac.uk/nets/newvideo/browser/gst-cvs/gstreamer/plugins/elements/gsttee.c
-    # and try to find tutorials on how to do it in Python and stuff. However,
-    # you can only pause entire pipelines, not just parts of one. Perhaps moving
-    # to tee would actually be worse overall. Then again, I can't find where in
-    # the source code for gsttee it copies anything; perhaps it's all done with
-    # ref counts, and if there is some way to turn off individual asr's, it
-    # would be much better. Look into gst_element_set_state(), which might do
-    # this?
-    self.pipeline = gst.parse_launch(
-        ("pulsesrc device=%s ! " % configuration.PULSESRC_NAME) +
-        #"gconfaudiosrc ! " +
-        "audioconvert ! audioresample ! " +
-        "vader name=vad auto-threshold=true ! " +
-        ("pocketsphinx name=%s ! " % name) +
-        "fakesink")
-
-    whole_filename = "%s/%s" % (configuration.DATA_DIR, name)
-    asr = self.pipeline.get_by_name(name)
-    asr.set_property("fsg", "%s.fsg" % whole_filename)
-    asr.set_property("dict", "%s.dic" % whole_filename)
-    asr.connect("result", self._EnqueueCommand)
-    asr.connect("partial_result", self._HandlePartialResult)
-    asr.set_property("configured", True)
-    self.pipeline.set_state(gst.STATE_PAUSED)
+    # We need to store a member pointer to the global pipeline. Something about
+    # the threadiness of gstreamer doesn't play well with global variables,
+    # maybe?
+    # TODO: try removing this when things are working more solidly.
+    self.pipeline = _pipeline
+    self.whole_filename = "%s/%s" % (configuration.DATA_DIR, name)
 
   def AddCommand(self, phrase, value):
     self.command_registry[phrase] = value
@@ -90,11 +73,22 @@ class CommandListener(object):
     self.command_queue = Queue.Queue()
 
   def Listen(self):
+    # TODO: replace this next line with a check to make sure the pipeline isn't
+    # currently being used by another listener.
+    self.pipeline.set_state(gst.STATE_PAUSED)
+    asr = self.pipeline.get_by_name("asr")
+    asr.set_property("configured", False)
+    asr.set_property("fsg", "%s.fsg" % self.whole_filename)
+    asr.set_property("dict", "%s.dic" % self.whole_filename)
+    asr.connect("result", self._EnqueueCommand)
+    asr.connect("partial_result", self._HandlePartialResult)
+    asr.set_property("configured", True)
+    time.sleep(1)
+    self.pipeline.set_state(gst.STATE_PLAYING)
     if VERBOSE:
-      print "Switching to new listener. Valid commands are:"
+      print "Switched to new listener. Valid commands are:"
       for command in self.command_registry:
         print command
-    self.pipeline.set_state(gst.STATE_PLAYING)
 
   def Pause(self):
     if VERBOSE:

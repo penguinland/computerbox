@@ -58,7 +58,7 @@ def Initialize():
   asr.set_property("fsg", "%s.fsg" % filename)
   asr.set_property("dict", "%s.dic" % filename)
   asr.connect("result", AsrResult)
-  #asr.connect("partial_result", AsrPartialResult)
+  asr.connect("partial_result", AsrPartialResult)
   asr.set_property("configured", True)
   pipeline.set_state(gst.STATE_PLAYING)
 
